@@ -1,0 +1,24 @@
+STEP 2: BASIC DATA (products start with stock 0)
+-- =====================================================
+INSERT INTO warehouses (warehouse_name, location) VALUES
+('Central Warehouse', 'Hyderabad'),
+('Southern Hub',      'Chennai'),
+('Bangalore Depot',   'Bangalore');
+ 
+INSERT INTO suppliers (supplier_name, city, phone) VALUES
+('Sun Traders',    'Hyderabad', '9876500001'),
+('Metro Supplies', 'Chennai',   '9876500002'),
+('Fresh Farms',    'Bangalore', '9876500003');
+ 
+INSERT INTO customers (customer_name, city) VALUES
+('Ravi',  'Hyderabad'),
+('Sneha', 'Chennai'),
+('Arjun', 'Mumbai'),
+('Priya', 'Bangalore');
+ 
+INSERT INTO products (product_name, warehouse_id, price, stock_qty, reorder_level) VALUES
+('Rice Bag 25kg',    1, 1200, 0, 30),
+('Wheat Flour 10kg', 1,  450, 0, 20),
+('Cooking Oil 5L',   2,  700, 0, 25),
+('Sugar 5kg',        2,  250, 0, 20),
+('Tea Powder 1kg',   2,  400, 0, 15);
