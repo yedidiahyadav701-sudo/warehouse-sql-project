@@ -1,0 +1,30 @@
+-- =====================================================
+-- STEP 9: DEMO - TEST PROCEDURES AND TRIGGERS
+-- =====================================================
+ 
+-- 1. Receive 100 Sugar from Metro Supplies (stock 15 -> 115)
+CALL sp_receive_stock(2, 4, 100);
+ 
+-- 2. Priya wants 50 Tea Powder, only 10 in stock -> Insufficient stock
+CALL sp_dispatch_stock(4, 5, 50);
+ 
+-- 3. Priya buys 20 Rice Bags (stock 70 -> 50)
+CALL sp_dispatch_stock(4, 1, 20);
+ 
+-- 4. Show the stock of the Central Warehouse
+CALL sp_warehouse_stock(1);
+ 
+-- 5. Check the stock again
+SELECT product_id, product_name, stock_qty FROM products;
+ 
+-- 6. Low stock report (Sugar is no longer in the list)
+SELECT * FROM vw_low_stock;
+ 
+-- 7. Priya now appears in the dispatch details
+SELECT * FROM vw_outbound_details;
+ 
+-- 8. A direct insert that breaks the rule: the trigger blocks it (ERROR 1644)
+-- (remove the two dashes below to test)
+-- INSERT INTO outbound (customer_id, product_id, quantity, dispatched_date)
+-- VALUES (1, 5, 500, CURDATE());
+ 
