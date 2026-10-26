@@ -1,0 +1,8 @@
+-- =====================================================
+-- STEP 8: VIEW QUERIES
+-- =====================================================
+SELECT * FROM vw_stock_details;
+SELECT * FROM vw_low_stock;
+SELECT * FROM vw_warehouse_summary;
+SELECT * FROM vw_outbound_details;
+ 
