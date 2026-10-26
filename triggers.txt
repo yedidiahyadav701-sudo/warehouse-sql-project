@@ -1,0 +1,46 @@
+-- =====================================================
+-- STEP 3: TRIGGERS (3)
+-- Created BEFORE the stock movements, so stock_qty
+-- is filled automatically.
+-- =====================================================
+DELIMITER //
+ 
+-- T1: goods received -> increase stock
+CREATE TRIGGER trg_inbound_add_stock
+AFTER INSERT ON inbound
+FOR EACH ROW
+BEGIN
+    UPDATE products
+    SET stock_qty = stock_qty + NEW.quantity
+    WHERE product_id = NEW.product_id;
+END //
+ 
+-- T2: before dispatch -> stop it if stock is not enough
+CREATE TRIGGER trg_outbound_check_stock
+BEFORE INSERT ON outbound
+FOR EACH ROW
+BEGIN
+    DECLARE v_stock INT;
+ 
+    SELECT stock_qty INTO v_stock
+    FROM products
+    WHERE product_id = NEW.product_id;
+ 
+    IF v_stock < NEW.quantity THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Insufficient stock';
+    END IF;
+END //
+ 
+-- T3: goods dispatched -> reduce stock
+CREATE TRIGGER trg_outbound_reduce_stock
+AFTER INSERT ON outbound
+FOR EACH ROW
+BEGIN
+    UPDATE products
+    SET stock_qty = stock_qty - NEW.quantity
+    WHERE product_id = NEW.product_id;
+END //
+ 
+DELIMITER ;
+ 
