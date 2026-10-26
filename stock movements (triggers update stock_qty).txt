@@ -1,0 +1,19 @@
+-- =====================================================
+-- STEP 6: STOCK MOVEMENTS (triggers update stock_qty)
+-- =====================================================
+INSERT INTO inbound (supplier_id, product_id, quantity, received_date) VALUES
+(1, 1, 100, '2024-10-01'),
+(1, 2,  60, '2024-10-03'),
+(2, 3,  40, '2024-10-05'),
+(2, 4,  50, '2024-10-07'),
+(3, 5,  30, '2024-10-09');
+ 
+INSERT INTO outbound (customer_id, product_id, quantity, dispatched_date) VALUES
+(1, 1, 30, '2024-11-01'),
+(2, 3, 20, '2024-11-03'),
+(3, 4, 35, '2024-11-05'),
+(1, 5, 20, '2024-11-08');
+ 
+-- Check the stock the triggers calculated
+SELECT product_id, product_name, stock_qty FROM products;
+ 
