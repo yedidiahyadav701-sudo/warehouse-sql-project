@@ -1,0 +1,43 @@
+STEP 4: STORED PROCEDURES (3)
+-- =====================================================
+DELIMITER //
+ 
+-- P1: receive stock from a supplier
+CREATE PROCEDURE sp_receive_stock(IN p_supplier INT, IN p_product INT, IN p_qty INT)
+BEGIN
+    INSERT INTO inbound (supplier_id, product_id, quantity, received_date)
+    VALUES (p_supplier, p_product, p_qty, CURDATE());
+ 
+    SELECT 'Stock received successfully' AS message;
+END //
+ 
+-- P2: dispatch stock to a customer only if enough stock is available
+CREATE PROCEDURE sp_dispatch_stock(IN p_customer INT, IN p_product INT, IN p_qty INT)
+BEGIN
+    DECLARE v_stock INT;
+ 
+    SELECT stock_qty INTO v_stock
+    FROM products
+    WHERE product_id = p_product;
+ 
+    IF v_stock >= p_qty THEN
+        INSERT INTO outbound (customer_id, product_id, quantity, dispatched_date)
+        VALUES (p_customer, p_product, p_qty, CURDATE());
+        SELECT 'Stock dispatched successfully' AS message;
+    ELSE
+        SELECT 'Insufficient stock' AS message;
+    END IF;
+END //
+ 
+-- P3: show all products of one warehouse
+CREATE PROCEDURE sp_warehouse_stock(IN p_warehouse INT)
+BEGIN
+    SELECT w.warehouse_name, p.product_name, p.stock_qty,
+           p.stock_qty * p.price AS stock_value
+    FROM products p
+    JOIN warehouses w ON p.warehouse_id = w.warehouse_id
+    WHERE p.warehouse_id = p_warehouse
+    ORDER BY p.product_id;
+END //
+ 
+DELIMITER ;
