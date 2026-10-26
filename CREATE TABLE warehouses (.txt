@@ -1,0 +1,51 @@
+CREATE TABLE warehouses (
+    warehouse_id   INT PRIMARY KEY AUTO_INCREMENT,
+    warehouse_name VARCHAR(100),
+    location       VARCHAR(50)
+);
+ 
+CREATE TABLE suppliers (
+    supplier_id   INT PRIMARY KEY AUTO_INCREMENT,
+    supplier_name VARCHAR(100),
+    city          VARCHAR(50),
+    phone         VARCHAR(15)
+);
+ 
+CREATE TABLE customers (
+    customer_id   INT PRIMARY KEY AUTO_INCREMENT,
+    customer_name VARCHAR(100),
+    city          VARCHAR(50)
+);
+ 
+-- Each product is stored in one warehouse; stock_qty is the current stock
+CREATE TABLE products (
+    product_id    INT PRIMARY KEY AUTO_INCREMENT,
+    product_name  VARCHAR(100),
+    warehouse_id  INT,
+    price         DECIMAL(10,2),
+    stock_qty     INT DEFAULT 0,
+    reorder_level INT,
+    FOREIGN KEY (warehouse_id) REFERENCES warehouses(warehouse_id)
+);
+ 
+-- Goods coming IN from suppliers
+CREATE TABLE inbound (
+    inbound_id    INT PRIMARY KEY AUTO_INCREMENT,
+    supplier_id   INT,
+    product_id    INT,
+    quantity      INT,
+    received_date DATE,
+    FOREIGN KEY (supplier_id) REFERENCES suppliers(supplier_id),
+    FOREIGN KEY (product_id)  REFERENCES products(product_id)
+);
+ 
+-- Goods going OUT to customers
+CREATE TABLE outbound (
+    outbound_id     INT PRIMARY KEY AUTO_INCREMENT,
+    customer_id     INT,
+    product_id      INT,
+    quantity        INT,
+    dispatched_date DATE,
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id),
+    FOREIGN KEY (product_id)  REFERENCES products(product_id)
+);
