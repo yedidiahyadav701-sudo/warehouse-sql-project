@@ -1,0 +1,41 @@
+-- =====================================================
+-- STEP 7: JOIN QUERIES
+-- =====================================================
+ 
+-- J1. Each product with its warehouse (INNER JOIN)
+SELECT p.product_name, w.warehouse_name, w.location, p.stock_qty
+FROM products p
+JOIN warehouses w ON p.warehouse_id = w.warehouse_id
+ORDER BY p.product_id;
+ 
+-- J2. Dispatch details with customer, product and amount (3 tables)
+SELECT o.outbound_id, c.customer_name, p.product_name, o.quantity,
+       o.quantity * p.price AS total_amount
+FROM outbound o
+JOIN customers c ON o.customer_id = c.customer_id
+JOIN products  p ON o.product_id  = p.product_id
+ORDER BY o.outbound_id;
+ 
+-- J3. Warehouses that have no products (LEFT JOIN + IS NULL)
+SELECT w.warehouse_name, w.location
+FROM warehouses w
+LEFT JOIN products p ON w.warehouse_id = p.warehouse_id
+WHERE p.product_id IS NULL;
+ 
+-- J4. Customers who have not taken any goods (LEFT JOIN + IS NULL)
+SELECT c.customer_name, c.city
+FROM customers c
+LEFT JOIN outbound o ON c.customer_id = o.customer_id
+WHERE o.outbound_id IS NULL;
+ 
+-- J5. Products that were never dispatched (LEFT JOIN + IS NULL)
+SELECT p.product_name
+FROM products p
+LEFT JOIN outbound o ON p.product_id = o.product_id
+WHERE o.outbound_id IS NULL;
+ 
+-- J6. Total quantity received from each supplier (LEFT JOIN + GROUP BY)
+SELECT s.supplier_name, COALESCE(SUM(i.quantity), 0) AS total_received
+FROM suppliers s
+LEFT JOIN inbound i ON s.supplier_id = i.supplier_id
+GROUP BY s.supplier_id, s.supplier_name;
